@@ -1,0 +1,14 @@
+{
+    "name": "lunchmate",
+    "version": "1.0.0",
+    "description": "## フロントエンド",
+    "main": "index.js",
+    "scripts": {
+        "install-client": "npm install --prefix client",
+        "install": "npm run install-client",
+        "client": "npm run dev --prefix client",
+        "dev": "npm run client"
+    },
+    "author": "",
+    "license": "ISC"
+}
