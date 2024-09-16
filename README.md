@@ -4,7 +4,7 @@
 
 | 項目               | 技術スタック | 公式ドキュメント                                                          |
 | ------------------ | ------------ | ------------------------------------------------------------------------- |
-| 言語               | TypeScript\* | [TypeScript 公式](https://www.typescriptlang.org/docs/)                   |
+| 言語               | TypeScript | [TypeScript 公式](https://www.typescriptlang.org/docs/)                   |
 | CSS フレームワーク | TailwindCSS  | [TailwindCSS 公式](https://tailwindcss.com/docs)                          |
 | UI フレームワーク  | Shadcn/ui    | [Shadcn/ui 公式](https://ui.shadcn.com/)                                  |
 | フレームワーク     | React        | [React 公式](https://react.dev/learn)                                     |
@@ -18,7 +18,7 @@
 | -------------- | ------------------------ | ---------------------------------------------------------------- |
 | 言語           | Node.js                  | [Node.js 公式](https://nodejs.org/en/docs/)                      |
 | フレームワーク | Express                  | [Express 公式](https://expressjs.com/en/starter/installing.html) |
-| データベース   | 未定（MongoDB を検討中） | [MongoDB 公式](https://docs.mongodb.com/)                        |
+| データベース   | MongoDB | [MongoDB 公式](https://docs.mongodb.com/)                        |
 
 ## 起動方法
 
