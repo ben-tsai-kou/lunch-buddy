@@ -12,8 +12,6 @@
 | 非同期状態管理     | React Query  | [React Query 公式](https://tanstack.com/query/v3/docs)                    |
 | ルーティング       | React Router | [React Router 公式](https://reactrouter.com/en/main)                      |
 
-\*TypeScript に慣れていない方は JavaScript を使用しても構いませんが、段階的に TypeScript を学習することをお勧めします。
-
 ## バックエンド
 
 | 項目           | 技術スタック             | 公式ドキュメント                                                 |
@@ -24,4 +22,4 @@
 
 ## 起動方法
 
-こちらの path => `/lunchmate` で `npm install` そして `npm run dev`
+こちらの path => `/lunch-buddy` で `npm install` そして `npm run dev`
