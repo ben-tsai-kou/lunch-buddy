@@ -1,10 +1,10 @@
 import express from 'express';
 
-import { httpSendingVerification, httpVerify } from './login.controller';
+import { httpHandleRegister, httpVerify } from './login.controller';
 
 const loginRouter = express.Router();
 
-loginRouter.post('/send-verification', httpSendingVerification);
+loginRouter.post('/register', httpHandleRegister);
 loginRouter.get('/verify', httpVerify);
 
 export { loginRouter };
