@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+
 import {
     handleIsEmailDomainValid,
     generateVerificationCode,
 } from '../../helper/login/login.helper';
+import { handleSaveUser } from '../../models/user/user.model';
 
 dotenv.config();
 
@@ -18,7 +20,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-async function httpSendingVerification(
+async function httpHandleRegister(
     req: Request,
     res: Response
 ): Promise<Response> {
@@ -48,6 +50,7 @@ async function httpSendingVerification(
     try {
         await transporter.verify();
         await transporter.sendMail(mailOptions);
+        await handleSaveUser({ email, verificationCode });
         return res.status(200).json({ message: 'Verification email sent' });
     } catch (error) {
         return res
@@ -58,4 +61,4 @@ async function httpSendingVerification(
 
 function httpVerify(req: Request, res: Response): void {}
 
-export { httpSendingVerification, httpVerify };
+export { httpHandleRegister, httpVerify };
