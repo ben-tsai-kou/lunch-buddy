@@ -3,14 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import Login from '@/components/Login/login.component';
 import useAuthStore from '@/store/useAuthStore';
 import { handleMockingApiFetching } from '@/lib/utils';
+import Register from '@/components/Register/register.component';
+import { useUserAuthHook } from '@/hooks/useUserAuthHook';
+import VerifyEmailForm from '@/components/VerifyEmailForm/verify-email-from.component';
 
 const LoginPage = () => {
     const { token, setToken } = useAuthStore();
-    const [isLoading, setIsLoading] = React.useState(false);
+    const {
+        isClickRegister,
+        handleToggleClickRegister,
+        handleUpdateUserInfo,
+        handleSubmitRegisterMail,
+        isSubmitRegister,
+    } = useUserAuthHook();
     const navigate = useNavigate();
 
     const handleMockingLogin = () => {
-        setIsLoading(true);
         return handleMockingApiFetching({ callback: () => true, timer: 500 });
     };
 
@@ -18,7 +26,6 @@ const LoginPage = () => {
         // ログイン API を呼び出す
         try {
             const data = await handleMockingLogin();
-            setIsLoading(data);
             setToken('token');
         } catch (e) {
             console.log(e);
@@ -32,10 +39,32 @@ const LoginPage = () => {
         }
     }, [token, navigate]);
 
+    const handleLoginPageRenderLogic = () => {
+        if (isClickRegister) {
+            return (
+                <Register
+                    handleToggleClickRegister={handleToggleClickRegister}
+                    handleUpdateUserInfo={handleUpdateUserInfo}
+                    handleSubmitRegisterMail={handleSubmitRegisterMail}
+                />
+            );
+        }
+        if (isSubmitRegister)
+            return (
+                <VerifyEmailForm
+                    handleToggleClickRegister={handleToggleClickRegister}
+                    handleUpdateUserInfo={handleUpdateUserInfo}
+                    handleSubmitRegisterMail={handleSubmitRegisterMail}
+                />
+            );
+
+        return (
+            <Login onLoginButtonClick={handleLoginButtonClick} handleToggleClickRegister={handleToggleClickRegister} />
+        );
+    };
+
     return (
-        <div className="h-screen flex justify-center items-center bg-neutral-200">
-            <Login onLoginButtonClick={handleLoginButtonClick} isLoading={isLoading} />
-        </div>
+        <div className="h-screen flex justify-center items-center bg-neutral-200">{handleLoginPageRenderLogic()}</div>
     );
 };
 
