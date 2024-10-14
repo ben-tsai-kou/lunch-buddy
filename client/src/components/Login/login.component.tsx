@@ -8,9 +8,10 @@ import { Link } from 'react-router-dom';
 type LoginProps = {
     onLoginButtonClick?: () => void;
     isLoading?: boolean;
+    handleToggleClickRegister: () => void;
 };
 
-const Login = ({ onLoginButtonClick, isLoading = false }: LoginProps) => {
+const Login = ({ onLoginButtonClick, isLoading = false, handleToggleClickRegister }: LoginProps) => {
     return isLoading ? (
         <Spinner />
     ) : (
@@ -40,7 +41,7 @@ const Login = ({ onLoginButtonClick, isLoading = false }: LoginProps) => {
                 </div>
                 <div className="mt-4 text-center text-sm">
                     Don&apos;t have an account?{' '}
-                    <Link to="#" className="underline">
+                    <Link to="#" className="underline" onClick={handleToggleClickRegister}>
                         Sign up
                     </Link>
                 </div>
