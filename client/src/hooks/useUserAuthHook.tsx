@@ -3,7 +3,10 @@ import { useRegisterStore } from '@/store/useRegisterStore';
 import React from 'react';
 
 export const useUserAuthHook = () => {
-    const { isClickRegister, setIsClickRegister, setIsSubmitRegister } = useRegisterStore((state) => state);
+    const { isClickRegister, setIsClickRegister, setIsSubmitRegister, setCurrentRegisterUserEmail } = useRegisterStore(
+        (state) => state
+    );
+
     const [userInfo, setUserInfo] = React.useState({
         email: '',
         password: '',
@@ -25,7 +28,14 @@ export const useUserAuthHook = () => {
     };
 
     const handleSubmitRegisterMail = async () => {
-        registerMutation.mutate({ data: userInfo });
+        try {
+            const response = await registerMutation.mutateAsync({ data: userInfo });
+            setCurrentRegisterUserEmail(response.userEmail);
+            setIsClickRegister(false);
+            setIsSubmitRegister(true);
+        } catch (error) {
+            console.log('error', error);
+        }
     };
 
     // TODO - handle send verify code with react query
