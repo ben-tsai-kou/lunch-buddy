@@ -1,6 +1,6 @@
 import { API_URL } from '@/types/url';
-import httpApiService from '../serviceConfig';
 import { PostRegisterResponseType, UserRegisterFormData } from './type';
+import httpApiService from '@/service/serviceConfig';
 
 export const handleRegisterAccountApi = async ({ data }: { data: UserRegisterFormData }) => {
     try {
