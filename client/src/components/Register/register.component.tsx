@@ -8,9 +8,15 @@ type RegisterProps = {
     handleToggleClickRegister: () => void;
     handleUpdateUserInfo: ({ key, value }: { key: string; value: string }) => void;
     handleSubmitRegisterMail: () => void;
+    isButtonDisable?: boolean;
 };
 
-const Register = ({ handleToggleClickRegister, handleUpdateUserInfo, handleSubmitRegisterMail }: RegisterProps) => {
+const Register = ({
+    handleToggleClickRegister,
+    handleUpdateUserInfo,
+    handleSubmitRegisterMail,
+    isButtonDisable = false,
+}: RegisterProps) => {
     return (
         <Card className="mx-auto max-w-sm">
             <CardHeader>
@@ -54,7 +60,12 @@ const Register = ({ handleToggleClickRegister, handleUpdateUserInfo, handleSubmi
                             }}
                         />
                     </div>
-                    <Button type="submit" className="w-full" onClick={handleSubmitRegisterMail}>
+                    <Button
+                        type="submit"
+                        className="w-full"
+                        onClick={handleSubmitRegisterMail}
+                        disabled={isButtonDisable}
+                    >
                         Create an account
                     </Button>
                 </div>
