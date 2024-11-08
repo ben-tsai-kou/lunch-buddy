@@ -6,16 +6,13 @@ import { handleMockingApiFetching } from '@/lib/utils';
 import Register from '@/components/Register/register.component';
 import { useUserAuthHook } from '@/hooks/useUserAuthHook';
 import VerifyEmailForm from '@/components/VerifyEmailForm/verify-email-from.component';
+import { useRegisterStore } from '@/store/useRegisterStore';
 
 const LoginPage = () => {
     const { token, setToken } = useAuthStore();
-    const {
-        isClickRegister,
-        handleToggleClickRegister,
-        handleUpdateUserInfo,
-        handleSubmitRegisterMail,
-        isSubmitRegister,
-    } = useUserAuthHook();
+    const { isSubmitRegister, isClickRegister } = useRegisterStore((state) => state);
+    const { handleToggleClickRegister, handleUpdateUserInfo, handleSubmitRegisterMail, registerMutation } =
+        useUserAuthHook();
     const navigate = useNavigate();
 
     const handleMockingLogin = () => {
@@ -46,6 +43,7 @@ const LoginPage = () => {
                     handleToggleClickRegister={handleToggleClickRegister}
                     handleUpdateUserInfo={handleUpdateUserInfo}
                     handleSubmitRegisterMail={handleSubmitRegisterMail}
+                    isButtonDisable={registerMutation.isPending}
                 />
             );
         }

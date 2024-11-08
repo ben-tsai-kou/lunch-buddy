@@ -1,16 +1,19 @@
+import { useRegisterMutation } from '@/service/register';
+import { useRegisterStore } from '@/store/useRegisterStore';
 import React from 'react';
 
 export const useUserAuthHook = () => {
-    const [isClickRegister, setIsClickRegister] = React.useState(false);
-    const [isSubmitRegister, setIsSubmitRegister] = React.useState(false);
+    const { isClickRegister, setIsClickRegister, setIsSubmitRegister } = useRegisterStore((state) => state);
     const [userInfo, setUserInfo] = React.useState({
         email: '',
         password: '',
         nickname: '',
     });
 
+    const registerMutation = useRegisterMutation();
+
     const handleToggleClickRegister = () => {
-        setIsClickRegister((prev) => !prev);
+        setIsClickRegister(!isClickRegister);
         setIsSubmitRegister(false);
     };
 
@@ -21,28 +24,20 @@ export const useUserAuthHook = () => {
         }));
     };
 
-    // TODO - handle register with react query
-    const handleSubmitRegisterMail = () => {
-        setIsClickRegister(false);
-        setIsSubmitRegister(true);
-
-        console.log('isSubmitRegister', isSubmitRegister);
+    const handleSubmitRegisterMail = async () => {
+        registerMutation.mutate({ data: userInfo });
     };
 
     // TODO - handle send verify code with react query
     const handleSubmitVerifyCode = () => {
-        console.log('isSubmitRegister', isSubmitRegister);
+        console.log('isSubmitRegister');
     };
 
     return {
-        isSubmitRegister,
-        isClickRegister,
-        setIsClickRegister,
         handleToggleClickRegister,
-        userInfo,
-        setUserInfo,
         handleUpdateUserInfo,
         handleSubmitRegisterMail,
         handleSubmitVerifyCode,
+        registerMutation,
     };
 };
