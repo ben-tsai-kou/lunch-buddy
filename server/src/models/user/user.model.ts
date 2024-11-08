@@ -1,25 +1,38 @@
-import axios from 'axios';
+import { PrismaClient } from '@prisma/client';
 
-import { userModel } from './user.mongo';
+const prisma = new PrismaClient();
 
 async function handleSaveUser({
     email,
+    password,
+    nickname,
     verificationCode,
 }: {
     email: string;
     verificationCode: string;
+    password: string;
+    nickname: string;
 }) {
-    const isUserExist = await userModel.findOne({ email });
+    const isUserExist = await prisma.user.findUnique({
+        where: {
+            email,
+        },
+    });
 
     if (isUserExist) {
         throw new Error('User already exist');
     }
 
-    const user = new userModel({
-        email,
-        verificationCode,
+    const user = await prisma.user.create({
+        data: {
+            email,
+            verificationCode,
+            password,
+            nickname,
+        },
     });
-    user.save();
+
+    return user;
 }
 
 export { handleSaveUser };
