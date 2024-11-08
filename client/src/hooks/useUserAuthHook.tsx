@@ -1,11 +1,10 @@
 import { useRegisterMutation } from '@/service/register';
-import { useRegisterStore } from '@/store/useRegisterStore';
 import React from 'react';
 
 export const useUserAuthHook = () => {
-    const { isClickRegister, setIsClickRegister, setIsSubmitRegister, setCurrentRegisterUserEmail } = useRegisterStore(
-        (state) => state
-    );
+    const [isClickRegister, setIsClickRegister] = React.useState(false);
+    const [isSubmitRegister, setIsSubmitRegister] = React.useState(false);
+    const [currentRegisterUserEmail, setCurrentRegisterUserEmail] = React.useState('');
 
     const [userInfo, setUserInfo] = React.useState({
         email: '',
@@ -44,6 +43,10 @@ export const useUserAuthHook = () => {
     };
 
     return {
+        isClickRegister,
+        isSubmitRegister,
+        setIsClickRegister,
+        setIsSubmitRegister,
         handleToggleClickRegister,
         handleUpdateUserInfo,
         handleSubmitRegisterMail,
