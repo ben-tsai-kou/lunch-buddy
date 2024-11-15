@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import bcryptjs from 'bcryptjs';
+import { z } from 'zod';
 
 import {
     handleIsEmailDomainValid,
@@ -23,6 +24,11 @@ const { GMAIL_USER, GMAIL_PASS } = process.env;
 if (!GMAIL_USER || !GMAIL_PASS) {
     throw new Error('GMAIL_USER or GMAIL_PASS not found');
 }
+
+const LoginSchema = z.object({
+    email: z.string().email('Invalid email format'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+});
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -48,6 +54,33 @@ async function handleSendVerificationEmail({
 
     await transporter.verify();
     await transporter.sendMail(mailOptions);
+}
+
+async function httpHandleLogin(
+    req: Request<{}, {}, { email: string; password: string }>,
+    res: Response
+): Promise<Response> {
+    const result = LoginSchema.safeParse(req.body);
+    if (!result.success) {
+        return res
+            .status(400)
+            .json({ message: 'Invalid input', errors: result.error.errors });
+    }
+    const { email, password } = req.body;
+
+    const user = await handleFindSpecificUserByKey({ email });
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    const isPasswordMatch = await bcryptjs.compare(password, user.password);
+
+    if (!isPasswordMatch) {
+        return res.status(401).json({ message: 'Invalid password' });
+    }
+
+    return res.status(200).json({ message: 'success' });
 }
 
 async function httpHandleRegister(
@@ -88,7 +121,7 @@ async function httpHandleRegister(
         });
         return res
             .status(200)
-            .json({ message: 'Verification email sent', userMail: email });
+            .json({ message: 'Verification email sent', userEmail: email });
     } catch (error) {
         if (error === 'User already exist') {
             return res.status(409).json({ message: 'User already exist' });
@@ -136,4 +169,4 @@ async function httpVerify(
     }
 }
 
-export { httpHandleRegister, httpVerify };
+export { httpHandleRegister, httpVerify, httpHandleLogin };
