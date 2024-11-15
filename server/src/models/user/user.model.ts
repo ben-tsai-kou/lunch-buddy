@@ -1,6 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
+
+async function handleFindSpecificUserByKey(where: Prisma.UserWhereUniqueInput) {
+    const user = await prisma.user.findUnique({
+        where,
+    });
+    return user || null;
+}
 
 async function handleSaveUser({
     email,
@@ -13,11 +20,7 @@ async function handleSaveUser({
     password: string;
     nickname: string;
 }) {
-    const isUserExist = await prisma.user.findUnique({
-        where: {
-            email,
-        },
-    });
+    const isUserExist = await handleFindSpecificUserByKey({ email });
 
     if (isUserExist) {
         throw new Error('User already exist');
@@ -35,4 +38,40 @@ async function handleSaveUser({
     return user;
 }
 
-export { handleSaveUser };
+async function handleUpdateUser({
+    where,
+    data,
+    isUpdateVerificationCode = false,
+}: {
+    where: Prisma.UserWhereUniqueInput;
+    data: {
+        email: string;
+        password: string;
+        nickname: string;
+        verificationCode: string;
+    };
+    isUpdateVerificationCode?: boolean;
+}) {
+    const isUserExist = await handleFindSpecificUserByKey(where);
+    if (!isUserExist) {
+        throw new Error('User not found');
+    }
+
+    const user = await prisma.user.update({
+        where,
+        data,
+    });
+
+    if (isUpdateVerificationCode) {
+        await prisma.user.update({
+            where,
+            data: {
+                isVerified: true,
+            },
+        });
+    }
+
+    return user;
+}
+
+export { handleFindSpecificUserByKey, handleSaveUser, handleUpdateUser };

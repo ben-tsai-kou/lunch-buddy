@@ -8,7 +8,11 @@ import {
     generateVerificationCode,
     validationUserInput,
 } from '../../helper/login/login.helper';
-import { handleSaveUser } from '../../models/user/user.model';
+import {
+    handleFindSpecificUserByKey,
+    handleSaveUser,
+    handleUpdateUser,
+} from '../../models/user/user.model';
 
 dotenv.config();
 
@@ -95,8 +99,41 @@ async function httpHandleRegister(
     }
 }
 
-async function httpVerify(req: Request, res: Response): Promise<Response> {
-    return res.status(200).json({ message: 'test' });
+async function httpVerify(
+    req: Request<{}, {}, { email: string; verificationCode: string }>,
+    res: Response
+): Promise<Response> {
+    try {
+        const user = await handleFindSpecificUserByKey({
+            email: req.body.email,
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.verificationCode !== req.body.verificationCode) {
+            return res
+                .status(500)
+                .json({ message: 'Verification code not match' });
+        }
+
+        await handleUpdateUser({
+            where: { email: user.email },
+            data: {
+                email: user.email,
+                nickname: user.nickname,
+                password: user.password,
+                verificationCode: '',
+            },
+            isUpdateVerificationCode: true,
+        });
+
+        return res.status(200).json({ message: 'success' });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error });
+    }
 }
 
 export { httpHandleRegister, httpVerify };
