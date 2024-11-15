@@ -2,14 +2,20 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { UserRegisterFormDataKey } from '@/types/LoginUserInput';
 
 type VerifyEmailProps = {
     handleToggleClickRegister: () => void;
-    handleUpdateUserInfo: ({ key, value }: { key: string; value: string }) => void;
+    handleSubmitVerificationCode: () => void;
+    handleUpdateUserInfo: ({ key, value }: { key: UserRegisterFormDataKey; value: string }) => void;
     handleSubmitRegisterMail: () => void;
 };
 
-const VerifyEmailForm = ({ handleToggleClickRegister }: VerifyEmailProps) => {
+const VerifyEmailForm = ({
+    handleUpdateUserInfo,
+    handleToggleClickRegister,
+    handleSubmitVerificationCode,
+}: VerifyEmailProps) => {
     return (
         <Card className="mx-auto max-w-sm">
             <CardHeader>
@@ -21,10 +27,16 @@ const VerifyEmailForm = ({ handleToggleClickRegister }: VerifyEmailProps) => {
                     <div className="grid gap-4 w-100">
                         <div className="grid gap-2">
                             <Label htmlFor="verify-code">verify code</Label>
-                            <Input id="verify-code" required />
+                            <Input
+                                id="verify-code"
+                                required
+                                onChange={(e) => {
+                                    handleUpdateUserInfo({ key: 'verificationCode', value: e.target.value });
+                                }}
+                            />
                         </div>
                     </div>
-                    <Button type="submit" className="w-full">
+                    <Button type="submit" className="w-full" onClick={handleSubmitVerificationCode}>
                         Submit
                     </Button>
                 </div>

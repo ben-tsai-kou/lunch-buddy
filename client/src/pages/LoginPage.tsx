@@ -13,6 +13,7 @@ const LoginPage = () => {
         handleToggleClickRegister,
         handleUpdateUserInfo,
         handleSubmitRegisterMail,
+        handleSubmitVerificationCode,
         registerMutation,
         isSubmitRegister,
         isClickRegister,
@@ -55,6 +56,7 @@ const LoginPage = () => {
             return (
                 <VerifyEmailForm
                     handleToggleClickRegister={handleToggleClickRegister}
+                    handleSubmitVerificationCode={handleSubmitVerificationCode}
                     handleUpdateUserInfo={handleUpdateUserInfo}
                     handleSubmitRegisterMail={handleSubmitRegisterMail}
                 />

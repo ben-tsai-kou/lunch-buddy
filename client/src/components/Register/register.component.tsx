@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { UserRegisterFormDataKey } from '@/types/LoginUserInput';
 
 type RegisterProps = {
     handleToggleClickRegister: () => void;
-    handleUpdateUserInfo: ({ key, value }: { key: string; value: string }) => void;
+    handleUpdateUserInfo: ({ key, value }: { key: UserRegisterFormDataKey; value: string }) => void;
     handleSubmitRegisterMail: () => void;
     isButtonDisable?: boolean;
 };

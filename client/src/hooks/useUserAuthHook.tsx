@@ -1,4 +1,6 @@
-import { useRegisterMutation } from '@/service/register';
+import { useRegisterMutation } from '@/service/login/register';
+import { useVerifyMutation } from '@/service/login/verify';
+import { UserRegisterFormDataKey } from '@/types/LoginUserInput';
 import React from 'react';
 
 export const useUserAuthHook = () => {
@@ -6,20 +8,22 @@ export const useUserAuthHook = () => {
     const [isSubmitRegister, setIsSubmitRegister] = React.useState(false);
     const [currentRegisterUserEmail, setCurrentRegisterUserEmail] = React.useState('');
 
+    const registerMutation = useRegisterMutation();
+    const verifyMutation = useVerifyMutation();
+
     const [userInfo, setUserInfo] = React.useState({
         email: '',
         password: '',
         nickname: '',
+        verificationCode: '',
     });
-
-    const registerMutation = useRegisterMutation();
 
     const handleToggleClickRegister = () => {
         setIsClickRegister(!isClickRegister);
         setIsSubmitRegister(false);
     };
 
-    const handleUpdateUserInfo = ({ key, value }: { key: string; value: string }) => {
+    const handleUpdateUserInfo = ({ key, value }: { key: UserRegisterFormDataKey; value: string }) => {
         setUserInfo((prev) => ({
             ...prev,
             [key]: value,
@@ -37,9 +41,20 @@ export const useUserAuthHook = () => {
         }
     };
 
-    // TODO - handle send verify code with react query
-    const handleSubmitVerifyCode = () => {
-        console.log('isSubmitRegister');
+    const handleSubmitVerificationCode = async () => {
+        try {
+            const response = await verifyMutation.mutateAsync({
+                data: {
+                    email: currentRegisterUserEmail,
+                    verificationCode: userInfo.verificationCode,
+                },
+            });
+
+            if (response.message === 'success') {
+                // setIsSubmitRegister(false);
+                console.log('isSubmitRegister');
+            }
+        } catch (error) {}
     };
 
     return {
@@ -50,7 +65,7 @@ export const useUserAuthHook = () => {
         handleToggleClickRegister,
         handleUpdateUserInfo,
         handleSubmitRegisterMail,
-        handleSubmitVerifyCode,
+        handleSubmitVerificationCode,
         registerMutation,
     };
 };
