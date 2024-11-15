@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Login from '@/components/Login/login.component';
 import useAuthStore from '@/store/useAuthStore';
-import { handleMockingApiFetching } from '@/lib/utils';
 import Register from '@/components/Register/register.component';
 import { useUserAuthHook } from '@/hooks/useUserAuthHook';
 import VerifyEmailForm from '@/components/VerifyEmailForm/verify-email-from.component';
@@ -14,25 +13,13 @@ const LoginPage = () => {
         handleUpdateUserInfo,
         handleSubmitRegisterMail,
         handleSubmitVerificationCode,
+        handleLoginButtonClick,
         registerMutation,
         isSubmitRegister,
         isClickRegister,
     } = useUserAuthHook();
+
     const navigate = useNavigate();
-
-    const handleMockingLogin = () => {
-        return handleMockingApiFetching({ callback: () => true, timer: 500 });
-    };
-
-    const handleLoginButtonClick = async () => {
-        // ログイン API を呼び出す
-        try {
-            const data = await handleMockingLogin();
-            setToken('token');
-        } catch (e) {
-            console.log(e);
-        }
-    };
 
     // ログイン済みの場合は / にリダイレクト
     React.useEffect(() => {

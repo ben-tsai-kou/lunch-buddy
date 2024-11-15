@@ -1,22 +1,26 @@
+import React from 'react';
+
 import { useRegisterMutation } from '@/service/login/register';
 import { useVerifyMutation } from '@/service/login/verify';
 import { UserRegisterFormDataKey } from '@/types/LoginUserInput';
-import React from 'react';
 
 export const useUserAuthHook = () => {
     const [isClickRegister, setIsClickRegister] = React.useState(false);
     const [isSubmitRegister, setIsSubmitRegister] = React.useState(false);
     const [currentRegisterUserEmail, setCurrentRegisterUserEmail] = React.useState('');
-
-    const registerMutation = useRegisterMutation();
-    const verifyMutation = useVerifyMutation();
-
     const [userInfo, setUserInfo] = React.useState({
         email: '',
         password: '',
         nickname: '',
         verificationCode: '',
     });
+
+    const registerMutation = useRegisterMutation();
+    const verifyMutation = useVerifyMutation();
+
+    const handleLoginButtonClick = (loginInfoValue: { email: string; password: string }) => {
+        console.log('loginInfoValue', loginInfoValue);
+    };
 
     const handleToggleClickRegister = () => {
         setIsClickRegister(!isClickRegister);
@@ -60,6 +64,7 @@ export const useUserAuthHook = () => {
     return {
         isClickRegister,
         isSubmitRegister,
+        handleLoginButtonClick,
         setIsClickRegister,
         setIsSubmitRegister,
         handleToggleClickRegister,
