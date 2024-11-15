@@ -1,48 +1,71 @@
+import { useRegisterMutation } from '@/service/login/register';
+import { useVerifyMutation } from '@/service/login/verify';
+import { UserRegisterFormDataKey } from '@/types/LoginUserInput';
 import React from 'react';
 
 export const useUserAuthHook = () => {
     const [isClickRegister, setIsClickRegister] = React.useState(false);
     const [isSubmitRegister, setIsSubmitRegister] = React.useState(false);
+    const [currentRegisterUserEmail, setCurrentRegisterUserEmail] = React.useState('');
+
+    const registerMutation = useRegisterMutation();
+    const verifyMutation = useVerifyMutation();
+
     const [userInfo, setUserInfo] = React.useState({
         email: '',
         password: '',
         nickname: '',
+        verificationCode: '',
     });
 
     const handleToggleClickRegister = () => {
-        setIsClickRegister((prev) => !prev);
+        setIsClickRegister(!isClickRegister);
         setIsSubmitRegister(false);
     };
 
-    const handleUpdateUserInfo = ({ key, value }: { key: string; value: string }) => {
+    const handleUpdateUserInfo = ({ key, value }: { key: UserRegisterFormDataKey; value: string }) => {
         setUserInfo((prev) => ({
             ...prev,
             [key]: value,
         }));
     };
 
-    // TODO - handle register with react query
-    const handleSubmitRegisterMail = () => {
-        setIsClickRegister(false);
-        setIsSubmitRegister(true);
-
-        console.log('isSubmitRegister', isSubmitRegister);
+    const handleSubmitRegisterMail = async () => {
+        try {
+            const response = await registerMutation.mutateAsync({ data: userInfo });
+            setCurrentRegisterUserEmail(response.userEmail);
+            setIsClickRegister(false);
+            setIsSubmitRegister(true);
+        } catch (error) {
+            console.log('error', error);
+        }
     };
 
-    // TODO - handle send verify code with react query
-    const handleSubmitVerifyCode = () => {
-        console.log('isSubmitRegister', isSubmitRegister);
+    const handleSubmitVerificationCode = async () => {
+        try {
+            const response = await verifyMutation.mutateAsync({
+                data: {
+                    email: currentRegisterUserEmail,
+                    verificationCode: userInfo.verificationCode,
+                },
+            });
+
+            if (response.message === 'success') {
+                // setIsSubmitRegister(false);
+                console.log('isSubmitRegister');
+            }
+        } catch (error) {}
     };
 
     return {
-        isSubmitRegister,
         isClickRegister,
+        isSubmitRegister,
         setIsClickRegister,
+        setIsSubmitRegister,
         handleToggleClickRegister,
-        userInfo,
-        setUserInfo,
         handleUpdateUserInfo,
         handleSubmitRegisterMail,
-        handleSubmitVerifyCode,
+        handleSubmitVerificationCode,
+        registerMutation,
     };
 };

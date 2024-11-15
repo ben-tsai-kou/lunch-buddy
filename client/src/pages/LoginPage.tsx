@@ -10,11 +10,13 @@ import VerifyEmailForm from '@/components/VerifyEmailForm/verify-email-from.comp
 const LoginPage = () => {
     const { token, setToken } = useAuthStore();
     const {
-        isClickRegister,
         handleToggleClickRegister,
         handleUpdateUserInfo,
         handleSubmitRegisterMail,
+        handleSubmitVerificationCode,
+        registerMutation,
         isSubmitRegister,
+        isClickRegister,
     } = useUserAuthHook();
     const navigate = useNavigate();
 
@@ -46,6 +48,7 @@ const LoginPage = () => {
                     handleToggleClickRegister={handleToggleClickRegister}
                     handleUpdateUserInfo={handleUpdateUserInfo}
                     handleSubmitRegisterMail={handleSubmitRegisterMail}
+                    isButtonDisable={registerMutation.isPending}
                 />
             );
         }
@@ -53,6 +56,7 @@ const LoginPage = () => {
             return (
                 <VerifyEmailForm
                     handleToggleClickRegister={handleToggleClickRegister}
+                    handleSubmitVerificationCode={handleSubmitVerificationCode}
                     handleUpdateUserInfo={handleUpdateUserInfo}
                     handleSubmitRegisterMail={handleSubmitRegisterMail}
                 />

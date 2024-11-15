@@ -15,4 +15,29 @@ function generateVerificationCode() {
     return crypto.randomBytes(3).toString('hex');
 }
 
-export { handleIsEmailDomainValid, generateVerificationCode };
+function validationUserInput({
+    email,
+    nickname,
+    password,
+}: {
+    email: string;
+    nickname: string;
+    password: string;
+}): string | null {
+    if (!email) {
+        return 'Email is required';
+    }
+    if (!nickname) {
+        return 'nickname is required';
+    }
+    if (!password) {
+        return 'password is required';
+    }
+    return null;
+}
+
+export {
+    handleIsEmailDomainValid,
+    generateVerificationCode,
+    validationUserInput,
+};
