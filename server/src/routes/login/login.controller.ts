@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import bcryptjs from 'bcryptjs';
 import { z } from 'zod';
+import jwt from 'jsonwebtoken';
 
 import {
     handleIsEmailDomainValid,
@@ -80,7 +81,14 @@ async function httpHandleLogin(
         return res.status(401).json({ message: 'Invalid password' });
     }
 
-    return res.status(200).json({ message: 'success' });
+    // generate a jwt token
+    const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        process.env.JWT_SECRET as string,
+        { expiresIn: '1h' }
+    );
+
+    return res.status(200).json({ message: 'success', token });
 }
 
 async function httpHandleRegister(
