@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import useAuthStore from '@/store/useAuthStore';
 
 const baseConfig: AxiosRequestConfig = {
     baseURL: import.meta.env.VITE_REACT_APP_API_BASE_URL,
@@ -10,18 +11,18 @@ const baseConfig: AxiosRequestConfig = {
 
 const axiosInstance = axios.create(baseConfig);
 
-// axiosInstance.interceptors.request.use(
-//     (config) => {
-//         const token = localStorage.getItem('token');
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const { token } = useAuthStore.getState();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 axiosInstance.interceptors.response.use(
     (response) => {

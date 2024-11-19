@@ -3,7 +3,7 @@ import { API_URL } from '@/types/url';
 
 export const handleLoginAccountApi = async ({ data }: { data: { email: string; password: string } }) => {
     try {
-        const res = await httpApiService.POST<{ message: string }>({
+        const res = await httpApiService.POST<{ message: string; token: string }>({
             url: API_URL.LOGIN_USER_LOGIN,
             data,
         });

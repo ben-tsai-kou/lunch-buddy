@@ -7,7 +7,7 @@ import { useUserAuthHook } from '@/hooks/useUserAuthHook';
 import VerifyEmailForm from '@/components/VerifyEmailForm/verify-email-from.component';
 
 const LoginPage = () => {
-    const { token, setToken } = useAuthStore();
+    const { token } = useAuthStore();
     const {
         handleToggleClickRegister,
         handleSubmitRegisterMail,

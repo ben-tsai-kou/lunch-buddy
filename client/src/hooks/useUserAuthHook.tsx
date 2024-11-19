@@ -14,11 +14,7 @@ export const useUserAuthHook = () => {
 
     const handleLoginButtonClick = async (loginInfoValue: { email: string; password: string }) => {
         try {
-            const response = await loginMutation.mutateAsync({ data: loginInfoValue });
-
-            if (response.message === 'success') {
-                console.log('login success');
-            }
+            await loginMutation.mutateAsync({ data: loginInfoValue });
         } catch (error) {
             console.log('error', error);
         }
@@ -50,10 +46,12 @@ export const useUserAuthHook = () => {
             });
 
             if (response.message === 'success') {
-                // setIsSubmitRegister(false);
-                console.log('isSubmitRegister');
+                setIsClickRegister(false);
+                setIsSubmitRegister(false);
             }
-        } catch (error) {}
+        } catch (error) {
+            console.log('error');
+        }
     };
 
     return {
