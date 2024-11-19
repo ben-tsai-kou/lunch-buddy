@@ -1,20 +1,12 @@
 import React from 'react';
-
 import { useRegisterMutation } from '@/service/login/register';
 import { useVerifyMutation } from '@/service/login/verify';
-import { UserRegisterFormDataKey } from '@/types/LoginUserInput';
 import { useLoginMutation } from '@/service/login/login';
 
 export const useUserAuthHook = () => {
     const [isClickRegister, setIsClickRegister] = React.useState(false);
     const [isSubmitRegister, setIsSubmitRegister] = React.useState(false);
     const [currentRegisterUserEmail, setCurrentRegisterUserEmail] = React.useState('');
-    const [userInfo, setUserInfo] = React.useState({
-        email: '',
-        password: '',
-        nickname: '',
-        verificationCode: '',
-    });
 
     const registerMutation = useRegisterMutation();
     const verifyMutation = useVerifyMutation();
@@ -22,11 +14,7 @@ export const useUserAuthHook = () => {
 
     const handleLoginButtonClick = async (loginInfoValue: { email: string; password: string }) => {
         try {
-            const response = await loginMutation.mutateAsync({ data: loginInfoValue });
-
-            if (response.message === 'success') {
-                console.log('login success');
-            }
+            await loginMutation.mutateAsync({ data: loginInfoValue });
         } catch (error) {
             console.log('error', error);
         }
@@ -37,16 +25,9 @@ export const useUserAuthHook = () => {
         setIsSubmitRegister(false);
     };
 
-    const handleUpdateUserInfo = ({ key, value }: { key: UserRegisterFormDataKey; value: string }) => {
-        setUserInfo((prev) => ({
-            ...prev,
-            [key]: value,
-        }));
-    };
-
-    const handleSubmitRegisterMail = async () => {
+    const handleSubmitRegisterMail = async (data: { email: string; password: string; nickname: string }) => {
         try {
-            const response = await registerMutation.mutateAsync({ data: userInfo });
+            const response = await registerMutation.mutateAsync({ data });
             setCurrentRegisterUserEmail(response.userEmail);
             setIsClickRegister(false);
             setIsSubmitRegister(true);
@@ -55,20 +36,22 @@ export const useUserAuthHook = () => {
         }
     };
 
-    const handleSubmitVerificationCode = async () => {
+    const handleSubmitVerificationCode = async (userInfo: { verificationCode: string }) => {
         try {
             const response = await verifyMutation.mutateAsync({
                 data: {
                     email: currentRegisterUserEmail,
-                    verificationCode: userInfo.verificationCode,
+                    verificationCode: userInfo?.verificationCode,
                 },
             });
 
             if (response.message === 'success') {
-                // setIsSubmitRegister(false);
-                console.log('isSubmitRegister');
+                setIsClickRegister(false);
+                setIsSubmitRegister(false);
             }
-        } catch (error) {}
+        } catch (error) {
+            console.log('error');
+        }
     };
 
     return {
@@ -78,7 +61,6 @@ export const useUserAuthHook = () => {
         setIsClickRegister,
         setIsSubmitRegister,
         handleToggleClickRegister,
-        handleUpdateUserInfo,
         handleSubmitRegisterMail,
         handleSubmitVerificationCode,
         registerMutation,
