@@ -10,7 +10,6 @@ const LoginPage = () => {
     const { token, setToken } = useAuthStore();
     const {
         handleToggleClickRegister,
-        handleUpdateUserInfo,
         handleSubmitRegisterMail,
         handleSubmitVerificationCode,
         handleLoginButtonClick,
@@ -33,7 +32,6 @@ const LoginPage = () => {
             return (
                 <Register
                     handleToggleClickRegister={handleToggleClickRegister}
-                    handleUpdateUserInfo={handleUpdateUserInfo}
                     handleSubmitRegisterMail={handleSubmitRegisterMail}
                     isButtonDisable={registerMutation.isPending}
                 />
@@ -44,8 +42,6 @@ const LoginPage = () => {
                 <VerifyEmailForm
                     handleToggleClickRegister={handleToggleClickRegister}
                     handleSubmitVerificationCode={handleSubmitVerificationCode}
-                    handleUpdateUserInfo={handleUpdateUserInfo}
-                    handleSubmitRegisterMail={handleSubmitRegisterMail}
                 />
             );
 
